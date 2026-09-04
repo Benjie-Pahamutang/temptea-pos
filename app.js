@@ -865,11 +865,11 @@ if (typeof require !== 'undefined' && typeof process !== 'undefined') {
   try {
     const express = require('express');
     const app = express();
-    const PORT = process.env.PORT || 3000;
+    const PORT = process.env.PORT || 3001;
 
     app.use(express.json());
 
-    // PRODUCTS STUBS
+    // PRODUCTS STUBS (Assigned to Benjie)
     app.get('/products', (req, res) => {
       res.status(200).json({ status: 200, data: appState.products, error: null });
     });
@@ -893,7 +893,7 @@ if (typeof require !== 'undefined' && typeof process !== 'undefined') {
       res.status(200).json({ status: 200, data: { message: "deleteProduct stub", id }, error: null });
     });
 
-    // ORDERS STUBS
+    // ORDERS STUBS (Assigned to Mekyla)
     app.get('/orders', (req, res) => {
       res.status(200).json({ status: 200, data: appState.sales, error: null });
     });
@@ -915,6 +915,30 @@ if (typeof require !== 'undefined' && typeof process !== 'undefined') {
     app.delete('/orders/:id', (req, res) => {
       const { id } = req.params;
       res.status(200).json({ status: 200, data: { message: "deleteOrder stub", id }, error: null });
+    });
+
+    // CUSTOMERS STUBS (Assigned to Janila)
+    app.get('/customers', (req, res) => {
+      res.status(200).json({ status: 200, data: [], error: null });
+    });
+
+    app.get('/customers/:id', (req, res) => {
+      const { id } = req.params;
+      res.status(200).json({ status: 200, data: { message: "getCustomerById stub", id }, error: null });
+    });
+
+    app.post('/customers', (req, res) => {
+      res.status(201).json({ status: 201, data: { message: "createCustomer stub", received: req.body }, error: null });
+    });
+
+    app.put('/customers/:id', (req, res) => {
+      const { id } = req.params;
+      res.status(200).json({ status: 200, data: { message: "updateCustomer stub", id, updated: req.body }, error: null });
+    });
+
+    app.delete('/customers/:id', (req, res) => {
+      const { id } = req.params;
+      res.status(200).json({ status: 200, data: { message: "deleteCustomer stub", id }, error: null });
     });
 
     if (require.main === module) {
