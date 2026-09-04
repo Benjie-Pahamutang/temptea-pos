@@ -1,0 +1,69 @@
+{
+  "name": "temptea-pos",
+  "version": "1.0.0",
+  "description": "TEMPTEA POS Enterprise Application",
+  "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Benjie-Pahamutang/temptea-pos.git"
+  },
+  "scripts": {
+    "start": "electron .",
+    "build-exe": "npx electron-packager . TEMPTEA-POS --platform=win32 --arch=x64 --electron-version=28.3.3 --out=dist/ --overwrite",
+    "dist": "npx electron-builder --win",
+    "publish-github": "npx electron-builder --win --publish always"
+  },
+  "author": "Benjie Pahamutang",
+  "license": "ISC",
+  "dependencies": {
+    "electron-updater": "6.8.9"
+  },
+  "devDependencies": {
+    "electron": "^28.3.3",
+    "electron-builder": "24.13.3",
+    "electron-packager": "^17.1.2"
+  },
+  "build": {
+    "appId": "com.temptea.pos",
+    "productName": "TEMPTEA POS",
+    "electronVersion": "28.3.3",
+    "asar": true,
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "index.html",
+      "style.css",
+      "app.js",
+      "main.js"
+    ],
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Benjie-Pahamutang",
+        "repo": "temptea-pos"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "TEMPTEA POS"
+    }
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/Benjie-Pahamutang/temptea-pos/issues"
+  },
+  "homepage": "https://github.com/Benjie-Pahamutang/temptea-pos#readme"
+}

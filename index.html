@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TEMPTEA Enterprise POS & Management System</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+
+  <!-- NOTIFICATION TOAST CONTAINER -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- MODAL CONTAINER SYSTEM -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div id="modal-content" class="modal-content">
+      <button id="modal-close" class="modal-close-btn">&times;</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- VIEW 1: AUTHENTICATION LOCKSCREEN -->
+  <section id="login-view" class="view active-view">
+    <div class="login-wrapper">
+      <div class="login-header">
+        <div class="brand-badge-container">
+          <span class="badge-icon">🍋</span>
+          <span class="badge-icon">🍔</span>
+          <span class="badge-icon">🍗</span>
+        </div>
+        <h1 class="brand-title">TEMPTEA</h1>
+        <p class="brand-subtitle">Enterprise Point of Sale v2.4.0</p>
+      </div>
+
+      <div class="login-card">
+        <form id="login-form">
+          <div class="pin-display-wrapper">
+            <input type="password" id="pin-input" class="pin-input" placeholder="••••" maxlength="6" autocomplete="off" readonly>
+            <button type="button" id="clear-pin-btn" class="pin-clear-btn">Clear</button>
+          </div>
+          <div class="pin-pad-grid">
+            <button type="button" class="pin-key" data-val="1">1</button>
+            <button type="button" class="pin-key" data-val="2">2</button>
+            <button type="button" class="pin-key" data-val="3">3</button>
+            <button type="button" class="pin-key" data-val="4">4</button>
+            <button type="button" class="pin-key" data-val="5">5</button>
+            <button type="button" class="pin-key" data-val="6">6</button>
+            <button type="button" class="pin-key" data-val="7">7</button>
+            <button type="button" class="pin-key" data-val="8">8</button>
+            <button type="button" class="pin-key" data-val="9">9</button>
+            <button type="button" class="pin-key pin-key-empty"></button>
+            <button type="button" class="pin-key" data-val="0">0</button>
+            <button type="button" class="pin-key pin-key-backspace" id="pin-backspace">⌫</button>
+          </div>
+          <button type="submit" id="login-submit-btn" class="btn btn-primary btn-block btn-lg">ENTER SYSTEM</button>
+        </form>
+      </div>
+      <div class="login-footer">
+        <p>Default Cashier PIN: <strong>1234</strong> | Default Admin PIN: <strong>8888</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIEW 2: MAIN APPLICATION -->
+  <div id="app-wrapper" class="app-wrapper hidden">
+    <!-- NAVIGATION BAR -->
+    <header class="navbar">
+      <div class="navbar-left">
+        <div class="logo-mark">
+          <span class="logo-text">TEMPTEA</span>
+          <span id="session-badge" class="badge badge-cashier">CASHIER MODE</span>
+        </div>
+      </div>
+
+      <div class="navbar-center">
+        <div class="search-bar-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="global-search" placeholder="Search menu items, orders, SKUs... (Press '/')" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="navbar-right">
+        <button id="btn-view-cashier" class="btn btn-nav active"><span class="icon">🛒</span> Cashier</button>
+        <button id="btn-view-admin" class="btn btn-nav"><span class="icon">⚙️</span> Admin Panel</button>
+        <button id="btn-view-orders" class="btn btn-nav"><span class="icon">📜</span> Orders</button>
+        <div class="user-profile-menu">
+          <span id="user-display-name">Cashier Demo</span>
+          <button id="btn-logout" class="btn btn-danger btn-sm">Logout</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- WORKSPACE AREA -->
+    <main class="main-workspace">
+      <!-- MAIN VIEW: CASHIER TERMINAL -->
+      <section id="cashier-view" class="workspace-tab active-tab">
+        <div class="pos-layout">
+          <!-- LEFT COLUMN: PRODUCT CATALOG & CATEGORIES -->
+          <div class="catalog-container">
+            <div class="category-bar" id="category-bar">
+              <button class="category-chip active" data-cat="all">All Items</button>
+              <button class="category-chip" data-cat="Milk Tea">Milk Tea 🧋</button>
+              <button class="category-chip" data-cat="Fruit Tea">Fruit Tea 🍹</button>
+              <button class="category-chip" data-cat="Burgers">Burgers 🍔</button>
+              <button class="category-chip" data-cat="Snacks">Snacks 🍟</button>
+              <button class="category-chip" data-cat="Add-ons">Add-ons 🍨</button>
+            </div>
+
+            <div class="product-grid-wrapper">
+              <div class="product-grid" id="product-grid">
+                <!-- Dynamic product cards rendered by JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN: CURRENT CART / BILLING TERMINAL -->
+          <aside class="billing-sidebar">
+            <div class="sidebar-header">
+              <h3>Current Order</h3>
+              <span id="cart-item-count" class="item-count-badge">0 Items</span>
+            </div>
+
+            <div class="customer-info-bar">
+              <input type="text" id="customer-name" placeholder="Customer Name (Optional)">
+              <select id="order-type-select">
+                <option value="Dine-In">Dine-In</option>
+                <option value="Take-Out">Take-Out</option>
+                <option value="Delivery">Delivery</option>
+              </select>
+            </div>
+
+            <div class="cart-items-wrapper">
+              <div id="cart-items" class="cart-items">
+                <div class="empty-cart-state">
+                  <div class="empty-icon">🛍️</div>
+                  <p>Cart is empty</p>
+                  <small>Click an item from the menu to start an order</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="billing-summary">
+              <div class="summary-line">
+                <span>Subtotal</span>
+                <span id="cart-subtotal">₱0.00</span>
+              </div>
+              <div class="summary-line">
+                <span>Tax (12% VAT)</span>
+                <span id="cart-tax">₱0.00</span>
+              </div>
+              <div class="summary-line discount-line">
+                <span>Discount (<span id="discount-label">None</span>)</span>
+                <span id="cart-discount">-₱0.00</span>
+              </div>
+              <div class="discount-actions">
+                <button type="button" class="btn btn-xs btn-outline" id="btn-apply-discount">Apply Discount</button>
+                <button type="button" class="btn btn-xs btn-outline-danger" id="btn-remove-discount">Remove</button>
+              </div>
+              <hr class="summary-divider">
+              <div class="summary-line total-line">
+                <span>Grand Total</span>
+                <span id="cart-total">₱0.00</span>
+              </div>
+
+              <div class="payment-controls">
+                <div class="cash-tendered-group">
+                  <label>Cash Received (₱)</label>
+                  <input type="number" id="cash-tendered" placeholder="0.00" min="0" step="0.01">
+                </div>
+                <div class="change-due-group">
+                  <label>Change Due</label>
+                  <div id="change-due" class="change-amount">₱0.00</div>
+                </div>
+              </div>
+
+              <div class="sidebar-actions">
+                <button id="btn-print" class="btn btn-success btn-block btn-lg">CHECKOUT & PRINT</button>
+                <button id="btn-hold-order" class="btn btn-secondary">Hold Order</button>
+                <button id="btn-clear-cart" class="btn btn-danger-outline">Clear</button>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- MAIN VIEW: ADMIN DASHBOARD -->
+      <section id="admin-view" class="workspace-tab hidden-tab">
+        <div class="admin-layout">
+          <aside class="admin-sidebar-nav">
+            <button class="admin-nav-item active" data-tab="tab-analytics">📈 Analytics & Sales</button>
+            <button class="admin-nav-item" data-tab="tab-inventory">📦 Inventory & Stock</button>
+            <button class="admin-nav-item" data-tab="tab-products">✨ Product Management</button>
+            <button class="admin-nav-item" data-tab="tab-receipt">🧾 Receipt Customization</button>
+            <button class="admin-nav-item" data-tab="tab-settings">⚙️ System Settings</button>
+          </aside>
+
+          <div class="admin-tab-content">
+            <!-- ADMIN TAB 1: ANALYTICS -->
+            <div id="tab-analytics" class="admin-section active-admin-section">
+              <h2>Dashboard & Sales Reports</h2>
+              <div class="kpi-grid">
+                <div class="kpi-card">
+                  <div class="kpi-title">Today's Revenue</div>
+                  <div class="kpi-value" id="kpi-today-sales">₱0.00</div>
+                  <div class="kpi-sub font-green">↑ 12.5% from yesterday</div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-title">Orders Completed</div>
+                  <div class="kpi-value" id="kpi-today-orders">0</div>
+                  <div class="kpi-sub">Avg Order: <span id="kpi-avg-order">₱0.00</span></div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-title">Total Products Stocked</div>
+                  <div class="kpi-value" id="kpi-total-stock">0</div>
+                  <div class="kpi-sub font-red" id="kpi-low-stock-alert">0 items low stock</div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-title">Active Dispatched Cashiers</div>
+                  <div class="kpi-value">2</div>
+                  <div class="kpi-sub">Shift Ends: 10:00 PM</div>
+                </div>
+              </div>
+
+              <div class="chart-block card">
+                <div class="card-header">
+                  <h3>Hourly Revenue Tracker</h3>
+                  <div class="actions">
+                    <button id="btn-export-sales-csv" class="btn btn-sm btn-secondary">📊 Export CSV</button>
+                    <button id="btn-export-sales-excel" class="btn btn-sm btn-secondary">🟢 Export Excel</button>
+                  </div>
+                </div>
+                <div class="custom-chart-container" id="sales-bar-chart">
+                  <!-- JS rendered CSS Bar Chart -->
+                </div>
+              </div>
+
+              <div class="card">
+                <h3>Detailed Transaction Logs</h3>
+                <div class="table-wrapper">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>Order ID</th>
+                        <th>Timestamp</th>
+                        <th>Customer</th>
+                        <th>Type</th>
+                        <th>Items Summary</th>
+                        <th>Total Amount</th>
+                        <th>Cashier</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="sales-history-tbody">
+                      <!-- Dynamic Sales Rows -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- ADMIN TAB 2: INVENTORY MANAGEMENT -->
+            <div id="tab-inventory" class="admin-section hidden-admin-section">
+              <div class="card-header">
+                <h2>Stock Level Control</h2>
+                <button id="btn-bulk-restock" class="btn btn-primary">+ Bulk Restock (+10 All)</button>
+              </div>
+
+              <div class="card">
+                <div class="table-wrapper">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>SKU</th>
+                        <th>Item Name</th>
+                        <th>Category</th>
+                        <th>Current Stock</th>
+                        <th>Status</th>
+                        <th>Stock Adjustment</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="inventory-tbody">
+                      <!-- Dynamic Inventory Rows -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- ADMIN TAB 3: PRODUCT MANAGEMENT -->
+            <div id="tab-products" class="admin-section hidden-admin-section">
+              <h2>Product Catalog Editor</h2>
+              <div class="admin-form-grid">
+                <div class="card">
+                  <h3 id="product-form-title">Add New Product</h3>
+                  <form id="add-product-form">
+                    <input type="hidden" id="edit-product-id" value="">
+                    <div class="form-group">
+                      <label>Product Name</label>
+                      <input type="text" id="prod-name" placeholder="e.g. Taro Milk Tea" required>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Price (₱)</label>
+                        <input type="number" id="prod-price" placeholder="0.00" step="0.01" required>
+                      </div>
+                      <div class="form-group">
+                        <label>Initial Stock</label>
+                        <input type="number" id="prod-stock" placeholder="0" required>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Category</label>
+                        <select id="prod-category" required>
+                          <option value="Milk Tea">Milk Tea</option>
+                          <option value="Fruit Tea">Fruit Tea</option>
+                          <option value="Burgers">Burgers</option>
+                          <option value="Snacks">Snacks</option>
+                          <option value="Add-ons">Add-ons</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label>Icon Emoji (Fallback)</label>
+                        <input type="text" id="prod-icon" placeholder="🥤" maxlength="2">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label>Product Image File (Optional Upload)</label>
+                      <input type="file" id="prod-image-file" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                      <label>Available Add-ons (Comma Separated)</label>
+                      <input type="text" id="prod-addons" placeholder="Extra Boba, 50% Sugar, Cheese Foam">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" id="prod-submit-btn">Save Product</button>
+                    <button type="button" class="btn btn-secondary btn-block hidden" id="prod-cancel-btn">Cancel Edit</button>
+                  </form>
+                </div>
+
+                <div class="card">
+                  <h3>Active Menu Items</h3>
+                  <div class="table-wrapper">
+                    <table class="data-table">
+                      <thead>
+                        <tr>
+                          <th>Item</th>
+                          <th>Category</th>
+                          <th>Price</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody id="admin-product-tbody">
+                        <!-- Dynamic Product List -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ADMIN TAB 4: RECEIPT CUSTOMIZER -->
+            <div id="tab-receipt" class="admin-section hidden-admin-section">
+              <h2>Receipt Template Editor</h2>
+              <div class="admin-form-grid">
+                <div class="card">
+                  <form id="receipt-config-form">
+                    <div class="form-group">
+                      <label>Store Name</label>
+                      <input type="text" id="cfg-store-name" value="TEMPTEA BOUTIQUE">
+                    </div>
+                    <div class="form-group">
+                      <label>Branch Tagline / Address</label>
+                      <input type="text" id="cfg-store-address" value="Unit 102, Food Plaza, Uptown Branch">
+                    </div>
+                    <div class="form-group">
+                      <label>Tax Identification No. (TIN)</label>
+                      <input type="text" id="cfg-store-tin" value="TIN: 009-882-114-000">
+                    </div>
+                    <div class="form-group">
+                      <label>Footer Message</label>
+                      <textarea id="cfg-footer-msg" rows="3">Thank you for choosing TEMPTEA! Please come again.</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Settings</button>
+                  </form>
+                </div>
+
+                <div class="card flex-center">
+                  <h3>Live Receipt Preview</h3>
+                  <div class="receipt-preview-box">
+                    <div class="receipt-header">
+                      <div class="receipt-logo">🍋 🍔 🍗</div>
+                      <h4 id="prev-store-name">TEMPTEA BOUTIQUE</h4>
+                      <p id="prev-store-address">Unit 102, Food Plaza, Uptown Branch</p>
+                      <p id="prev-store-tin">TIN: 009-882-114-000</p>
+                      <p class="receipt-date">Date: 2026-09-03 14:30:22</p>
+                    </div>
+                    <div class="receipt-divider">--------------------------------</div>
+                    <div class="receipt-line"><span>Matcha Latte (x1)</span><span>₱110.00</span></div>
+                    <div class="receipt-addon-line">+ 50% Sugar</div>
+                    <div class="receipt-line"><span>Classic Burger (x1)</span><span>₱85.00</span></div>
+                    <div class="receipt-divider">--------------------------------</div>
+                    <div class="receipt-line"><span>Subtotal:</span><span>₱195.00</span></div>
+                    <div class="receipt-line"><span>VAT (12%):</span><span>₱23.40</span></div>
+                    <div class="receipt-line bold"><span>TOTAL:</span><span>₱218.40</span></div>
+                    <div class="receipt-divider">--------------------------------</div>
+                    <p id="prev-footer-msg" class="receipt-footer-msg">Thank you for choosing TEMPTEA!</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ADMIN TAB 5: SYSTEM SETTINGS -->
+            <div id="tab-settings" class="admin-section hidden-admin-section">
+              <h2>System Data Controls</h2>
+              <div class="card danger-zone-card">
+                <h3 class="font-red">Database & LocalStorage Diagnostics</h3>
+                <p>Perform system state resets or backup data backups locally.</p>
+                <div class="btn-group margin-top-1">
+                  <button id="btn-export-backup" class="btn btn-secondary">💾 Download System Backup JSON</button>
+                  <button id="btn-reset-data" class="btn btn-danger">⚠️ Wipe Database & Reset Defaults</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MAIN VIEW: ORDER HISTORY LOGS -->
+      <section id="orders-view" class="workspace-tab hidden-tab">
+        <div class="card">
+          <h2>Completed Orders Log</h2>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Receipt Ref</th>
+                  <th>Date & Time</th>
+                  <th>Customer</th>
+                  <th>Type</th>
+                  <th>Items Purchased</th>
+                  <th>Total</th>
+                  <th>Cash Received</th>
+                  <th>Change Given</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="orders-log-tbody">
+                <!-- Injected Order Logs -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- PRINT RECEIPT TEMPLATE (NATIVE PRINT ENGINE TARGET) -->
+  <div id="printable-receipt" class="print-only">
+    <div class="receipt-print-wrapper">
+      <div class="receipt-header">
+        <h2 id="print-store-name">TEMPTEA</h2>
+        <p id="print-store-address">Uptown Branch</p>
+        <p id="print-store-tin">TIN: 000-000-000</p>
+        <div class="receipt-divider">--------------------------------</div>
+        <p><strong>Order Ref:</strong> <span id="print-order-ref">#0000</span></p>
+        <p><strong>Date:</strong> <span id="print-date"></span></p>
+        <p><strong>Cashier:</strong> <span id="print-cashier">Cashier</span></p>
+        <p><strong>Customer:</strong> <span id="print-customer">Guest</span></p>
+        <p><strong>Type:</strong> <span id="print-order-type">Dine-In</span></p>
+      </div>
+      <div class="receipt-divider">--------------------------------</div>
+      <div id="print-items-list">
+        <!-- Rendered Print Items -->
+      </div>
+      <div class="receipt-divider">--------------------------------</div>
+      <div class="receipt-line"><span>Subtotal:</span><span id="print-subtotal">₱0.00</span></div>
+      <div class="receipt-line"><span>VAT (12%):</span><span id="print-tax">₱0.00</span></div>
+      <div class="receipt-line"><span>Discount:</span><span id="print-discount">-₱0.00</span></div>
+      <div class="receipt-divider">--------------------------------</div>
+      <div class="receipt-line bold large"><span>GRAND TOTAL:</span><span id="print-total">₱0.00</span></div>
+      <div class="receipt-line"><span>Cash Paid:</span><span id="print-cash">₱0.00</span></div>
+      <div class="receipt-line"><span>Change:</span><span id="print-change">₱0.00</span></div>
+      <div class="receipt-divider">--------------------------------</div>
+      <p id="print-footer-msg" class="receipt-footer-msg">Thank you for choosing TEMPTEA!</p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
