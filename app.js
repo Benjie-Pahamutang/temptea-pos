@@ -865,7 +865,7 @@ if (typeof require !== 'undefined' && typeof process !== 'undefined') {
   try {
     const express = require('express');
     const app = express();
-    const PORT = process.env.PORT || 3000;
+    const PORT = process.env.PORT || 3002;
 
     app.use(express.json());
 
@@ -915,6 +915,54 @@ if (typeof require !== 'undefined' && typeof process !== 'undefined') {
     app.delete('/orders/:id', (req, res) => {
       const { id } = req.params;
       res.status(200).json({ status: 200, data: { message: "deleteOrder stub", id }, error: null });
+    });
+
+    // CUSTOMERS STUBS (Assigned to Janila)
+    app.get('/customers', (req, res) => {
+      res.status(200).json({ status: 200, data: [], error: null });
+    });
+
+    app.get('/customers/:id', (req, res) => {
+      const { id } = req.params;
+      res.status(200).json({ status: 200, data: { message: "getCustomerById stub", id }, error: null });
+    });
+
+    app.post('/customers', (req, res) => {
+      res.status(201).json({ status: 201, data: { message: "createCustomer stub", received: req.body }, error: null });
+    });
+
+    app.put('/customers/:id', (req, res) => {
+      const { id } = req.params;
+      res.status(200).json({ status: 200, data: { message: "updateCustomer stub", id, updated: req.body }, error: null });
+    });
+
+    app.delete('/customers/:id', (req, res) => {
+      const { id } = req.params;
+      res.status(200).json({ status: 200, data: { message: "deleteCustomer stub", id }, error: null });
+    });
+
+    // STAFF STUBS (Assigned to Norie & Rome)
+    app.get('/staff', (req, res) => {
+      res.status(200).json({ status: 200, data: [], error: null });
+    });
+
+    app.get('/staff/:id', (req, res) => {
+      const { id } = req.params;
+      res.status(200).json({ status: 200, data: { message: "getStaffById stub", id }, error: null });
+    });
+
+    app.post('/staff', (req, res) => {
+      res.status(201).json({ status: 201, data: { message: "createStaff stub", received: req.body }, error: null });
+    });
+
+    app.put('/staff/:id', (req, res) => {
+      const { id } = req.params;
+      res.status(200).json({ status: 200, data: { message: "updateStaff stub", id, updated: req.body }, error: null });
+    });
+
+    app.delete('/staff/:id', (req, res) => {
+      const { id } = req.params;
+      res.status(200).json({ status: 200, data: { message: "deleteStaff stub", id }, error: null });
     });
 
     if (require.main === module) {
