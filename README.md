@@ -1,6 +1,6 @@
 # Wireframes Index & Screen Assignments
 
-Every screen contains happy path, empty state, error state, and delete confirmation step[cite: 2]:
+Every screen contains happy path, empty state, error state, and delete confirmation step:
 
 | Screen / State | Assigned Designer | Associated Story |
 | :--- | :--- | :--- |
@@ -15,28 +15,30 @@ Every screen contains happy path, empty state, error state, and delete confirmat
 
 *Note: Wireframe image files (`.png` / `.fig` / `.excalidraw`) for each state are stored in this directory.*
 
-## Application Feature Gallery
+---
+
+## Application Screenshots & Feature Previews
 
 ### 1. User Authentication / PIN Entry
-![PIN Entry Screen](./images/1v.png)
+![PIN Entry Screen](../../images/1v.png)
 
 ### 2. POS Ordering Interface
-![POS Ordering Interface](./images/2v.png)
+![POS Ordering Interface](../../images/2v.png)
 
 ### 3. Dashboard Analytics & Sales Metrics
-![Dashboard Analytics](./images/3v.png)
+![Dashboard Analytics](../../images/3v.png)
 
 ### 4. Product Catalog Management
-![Product Catalog Management](./images/4v.png)
+![Product Catalog Management](../../images/4v.png)
 
 ### 5. Product Creation & Form Validation
-![Product Creation Form](./images/5v.png)
+![Product Creation Form](../../images/5v.png)
 
 ### 6. Receipt Generation & Printing
-![Receipt Template & Print Preview](./images/6v.png)
+![Receipt Template & Print Preview](../../images/6v.png)
 
 ### 7. Security Alert & Role Access Control
-![Security Alert Screen](./images/7v.png)
+![Security Alert Screen](../../images/7v.png)
 
 ### 8. Transaction & Order History Logs
-![Transaction History Logs](./images/8v.png)
+![Transaction History Logs](../../images/8v.png)
