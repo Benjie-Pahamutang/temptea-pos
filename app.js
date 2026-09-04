@@ -857,112 +857,465 @@ function showToast(message, type = 'success') {
 }
 
 // ==========================================
-// 10. WEEK 3: RESTFUL API STUB HANDLERS
+// 10. WEEK 5: SECURITY, MIDDLEWARE & API HANDLERS
 // ==========================================
 
-// If executing in Node.js server context, register HTTP routes
+let app;
+
 if (typeof require !== 'undefined' && typeof process !== 'undefined') {
   try {
     const express = require('express');
-    const app = express();
+    let helmet;
+    try {
+      helmet = require('helmet');
+    } catch (e) {
+      helmet = null;
+    }
+
+    app = express();
     const PORT = process.env.PORT || 3002;
+
+    if (helmet) {
+      app.use(helmet());
+    }
 
     app.use(express.json());
 
-    // PRODUCTS STUBS
+    const ALLOWED_CATEGORIES = ["Milk Tea", "Fruit Tea", "Burgers", "Snacks", "Add-ons"];
+    const ALLOWED_ORDER_TYPES = ["Dine-In", "Take-Out", "Delivery"];
+    const ALLOWED_ROLES = ["Cashier", "Manager", "Admin", "Barista"];
+
+    // ------------------------------------------
+    // ADDONS ROUTES
+    // ------------------------------------------
+    const addonsDb = [];
+
+    function validateAddon(req, res, next) {
+      const { name, price } = req.body;
+
+      if (!name || typeof name !== 'string' || name.trim() === '') {
+        return res.status(422).json({
+          status: 422,
+          error: "'name' is required and must be a non-empty string",
+          field: "name"
+        });
+      }
+
+      if (price === undefined || typeof price !== 'number' || price < 0) {
+        return res.status(422).json({
+          status: 422,
+          error: "'price' is required and must be a non-negative number",
+          field: "price"
+        });
+      }
+
+      next();
+    }
+
+    app.get('/addons', (req, res) => {
+      res.status(200).json({ status: 200, data: addonsDb, error: null });
+    });
+
+    app.post('/addons', validateAddon, (req, res) => {
+      const newAddon = {
+        id: Date.now(),
+        name: req.body.name.trim(),
+        price: req.body.price,
+        timestamp: new Date().toISOString()
+      };
+
+      addonsDb.push(newAddon);
+      return res.status(201).json({ status: 201, data: newAddon, error: null });
+    });
+
+    // ------------------------------------------
+    // PRODUCTS ROUTES
+    // ------------------------------------------
     app.get('/products', (req, res) => {
       res.status(200).json({ status: 200, data: appState.products, error: null });
     });
 
     app.get('/products/:id', (req, res) => {
-      const { id } = req.params;
-      res.status(200).json({ status: 200, data: { message: "getProductById stub", id }, error: null });
+      const id = parseInt(req.params.id, 10);
+      if (isNaN(id)) {
+        return res.status(422).json({ status: 422, error: "Product ID must be a numeric integer", field: "id" });
+      }
+
+      const prod = appState.products.find(p => p.id === id);
+      if (!prod) {
+        return res.status(422).json({ status: 422, error: `Product with ID ${id} was not found`, field: "id" });
+      }
+
+      res.status(200).json({ status: 200, data: prod, error: null });
     });
 
     app.post('/products', (req, res) => {
-      res.status(201).json({ status: 201, data: { message: "createProduct stub", received: req.body }, error: null });
+      const { name, price, stock, category } = req.body;
+
+      if (!name || price === undefined || stock === undefined || !category) {
+        return res.status(422).json({ status: 422, error: "Fields 'name', 'price', 'stock', and 'category' are required", field: "presence" });
+      }
+      if (typeof name !== 'string' || typeof price !== 'number' || typeof stock !== 'number' || typeof category !== 'string') {
+        return res.status(422).json({ status: 422, error: "Invalid field types: 'name' and 'category' must be strings; 'price' and 'stock' must be numbers", field: "type" });
+      }
+      if (price < 0) {
+        return res.status(422).json({ status: 422, error: "Price cannot be negative", field: "price" });
+      }
+      if (stock < 0) {
+        return res.status(422).json({ status: 422, error: "Stock cannot be negative", field: "stock" });
+      }
+      if (!ALLOWED_CATEGORIES.includes(category)) {
+        return res.status(422).json({ status: 422, error: `Invalid category. Allowed: ${ALLOWED_CATEGORIES.join(", ")}`, field: "category" });
+      }
+
+      const newProduct = {
+        id: Date.now(),
+        name,
+        price,
+        stock,
+        category,
+        icon: req.body.icon || "🍵",
+        image: req.body.image || "",
+        addons: Array.isArray(req.body.addons) ? req.body.addons : []
+      };
+
+      appState.products.push(newProduct);
+      res.status(201).json({ status: 201, data: newProduct, error: null });
     });
 
     app.put('/products/:id', (req, res) => {
-      const { id } = req.params;
-      res.status(200).json({ status: 200, data: { message: "updateProduct stub", id, updated: req.body }, error: null });
+      const id = parseInt(req.params.id, 10);
+      if (isNaN(id)) {
+        return res.status(422).json({ status: 422, error: "Product ID must be a numeric integer", field: "id" });
+      }
+
+      const prod = appState.products.find(p => p.id === id);
+      if (!prod) {
+        return res.status(422).json({ status: 422, error: `Product with ID ${id} was not found`, field: "id" });
+      }
+
+      const { name, price, stock, category } = req.body;
+      if (name !== undefined && typeof name !== 'string') {
+        return res.status(422).json({ status: 422, error: "'name' must be a string", field: "name" });
+      }
+      if (price !== undefined && (typeof price !== 'number' || price < 0)) {
+        return res.status(422).json({ status: 422, error: "'price' must be a non-negative number", field: "price" });
+      }
+      if (stock !== undefined && (typeof stock !== 'number' || stock < 0)) {
+        return res.status(422).json({ status: 422, error: "'stock' must be a non-negative number", field: "stock" });
+      }
+      if (category !== undefined && !ALLOWED_CATEGORIES.includes(category)) {
+        return res.status(422).json({ status: 422, error: `Invalid category. Allowed: ${ALLOWED_CATEGORIES.join(", ")}`, field: "category" });
+      }
+
+      if (name) prod.name = name;
+      if (price !== undefined) prod.price = price;
+      if (stock !== undefined) prod.stock = stock;
+      if (category) prod.category = category;
+
+      res.status(200).json({ status: 200, data: prod, error: null });
     });
 
     app.delete('/products/:id', (req, res) => {
-      const { id } = req.params;
-      res.status(200).json({ status: 200, data: { message: "deleteProduct stub", id }, error: null });
+      const userRole = (req.headers['x-user-role'] || '').toLowerCase();
+      if (userRole !== 'admin') {
+        return res.status(403).json({ status: 403, error: "Forbidden: Only Administrators can delete products", field: "authorization" });
+      }
+
+      const id = parseInt(req.params.id, 10);
+      if (isNaN(id)) {
+        return res.status(422).json({ status: 422, error: "Product ID must be a numeric integer", field: "id" });
+      }
+
+      const idx = appState.products.findIndex(p => p.id === id);
+      if (idx === -1) {
+        return res.status(422).json({ status: 422, error: `Product with ID ${id} was not found`, field: "id" });
+      }
+
+      appState.products.splice(idx, 1);
+      res.status(200).json({ status: 200, data: { message: `Product ${id} deleted successfully` }, error: null });
     });
 
-    // ORDERS STUBS
+    // ------------------------------------------
+    // ORDERS ROUTES
+    // ------------------------------------------
     app.get('/orders', (req, res) => {
       res.status(200).json({ status: 200, data: appState.sales, error: null });
     });
 
     app.get('/orders/:id', (req, res) => {
-      const { id } = req.params;
-      res.status(200).json({ status: 200, data: { message: "getOrderById stub", id }, error: null });
+      const order = appState.sales.find(s => s.id === req.params.id);
+      if (!order) {
+        return res.status(422).json({ status: 422, error: `Order ref ${req.params.id} not found`, field: "id" });
+      }
+      res.status(200).json({ status: 200, data: order, error: null });
     });
 
     app.post('/orders', (req, res) => {
-      res.status(201).json({ status: 201, data: { message: "createOrder stub", received: req.body }, error: null });
+      const { items, cashPaid, type, customer } = req.body;
+
+      if (!items || !Array.isArray(items) || items.length === 0) {
+        return res.status(422).json({ status: 422, error: "Order must contain a non-empty 'items' array", field: "items" });
+      }
+
+      if (cashPaid === undefined || typeof cashPaid !== 'number' || cashPaid <= 0) {
+        return res.status(422).json({ status: 422, error: "'cashPaid' must be a positive number", field: "cashPaid" });
+      }
+
+      if (type && !ALLOWED_ORDER_TYPES.includes(type)) {
+        return res.status(422).json({ status: 422, error: `Invalid order type. Allowed: ${ALLOWED_ORDER_TYPES.join(", ")}`, field: "type" });
+      }
+
+      let calculatedTotal = 0;
+      for (const item of items) {
+        if (!item.id || !item.qty || typeof item.qty !== 'number' || item.qty <= 0) {
+          return res.status(422).json({ status: 422, error: "Each order item must have a valid 'id' and positive numeric 'qty'", field: "items" });
+        }
+
+        const prod = appState.products.find(p => p.id === item.id);
+        if (!prod) {
+          return res.status(422).json({ status: 422, error: `Referenced Product ID ${item.id} does not exist`, field: "items.id" });
+        }
+        if (prod.stock < item.qty) {
+          return res.status(422).json({ status: 422, error: `Insufficient stock for product '${prod.name}'. Requested: ${item.qty}, Available: ${prod.stock}`, field: "qty" });
+        }
+
+        calculatedTotal += prod.price * item.qty;
+      }
+
+      if (cashPaid < calculatedTotal) {
+        return res.status(422).json({ status: 422, error: `Insufficient cash paid. Total due is ₱${calculatedTotal.toFixed(2)}, received ₱${cashPaid.toFixed(2)}`, field: "cashPaid" });
+      }
+
+      items.forEach(item => {
+        const prod = appState.products.find(p => p.id === item.id);
+        if (prod) prod.stock -= item.qty;
+      });
+
+      const newOrder = {
+        id: `#TRX-${Math.floor(100000 + Math.random() * 900000)}`,
+        timestamp: new Date().toLocaleString(),
+        customer: customer || "Walk-in Guest",
+        type: type || "Dine-In",
+        items,
+        total: calculatedTotal,
+        cashPaid,
+        change: cashPaid - calculatedTotal,
+        cashier: req.headers['x-user-name'] || "API Client"
+      };
+
+      appState.sales.push(newOrder);
+      res.status(201).json({ status: 201, data: newOrder, error: null });
     });
 
     app.put('/orders/:id', (req, res) => {
-      const { id } = req.params;
-      res.status(200).json({ status: 200, data: { message: "updateOrder stub", id, updated: req.body }, error: null });
+      const order = appState.sales.find(s => s.id === req.params.id);
+      if (!order) {
+        return res.status(422).json({ status: 422, error: `Order ref ${req.params.id} not found`, field: "id" });
+      }
+
+      const { customer, type } = req.body;
+      if (type && !ALLOWED_ORDER_TYPES.includes(type)) {
+        return res.status(422).json({ status: 422, error: `Invalid order type. Allowed: ${ALLOWED_ORDER_TYPES.join(", ")}`, field: "type" });
+      }
+
+      if (customer) order.customer = customer;
+      if (type) order.type = type;
+
+      res.status(200).json({ status: 200, data: order, error: null });
     });
 
     app.delete('/orders/:id', (req, res) => {
-      const { id } = req.params;
-      res.status(200).json({ status: 200, data: { message: "deleteOrder stub", id }, error: null });
+      const userRole = (req.headers['x-user-role'] || '').toLowerCase();
+      if (userRole !== 'admin') {
+        return res.status(403).json({ status: 403, error: "Forbidden: Only Administrators can void/delete orders", field: "authorization" });
+      }
+
+      const idx = appState.sales.findIndex(s => s.id === req.params.id);
+      if (idx === -1) {
+        return res.status(422).json({ status: 422, error: `Order ref ${req.params.id} not found`, field: "id" });
+      }
+
+      appState.sales.splice(idx, 1);
+      res.status(200).json({ status: 200, data: { message: `Order ${req.params.id} voided successfully` }, error: null });
     });
 
-    // CUSTOMERS STUBS (Assigned to Janila)
+    // ------------------------------------------
+    // CUSTOMERS ROUTES
+    // ------------------------------------------
+    const customerDb = [];
+
     app.get('/customers', (req, res) => {
-      res.status(200).json({ status: 200, data: [], error: null });
+      res.status(200).json({ status: 200, data: customerDb, error: null });
     });
 
     app.get('/customers/:id', (req, res) => {
-      const { id } = req.params;
-      res.status(200).json({ status: 200, data: { message: "getCustomerById stub", id }, error: null });
+      const id = parseInt(req.params.id, 10);
+      if (isNaN(id)) {
+        return res.status(422).json({ status: 422, error: "Customer ID must be a numeric integer", field: "id" });
+      }
+
+      const customer = customerDb.find(c => c.id === id);
+      if (!customer) {
+        return res.status(422).json({ status: 422, error: `Customer with ID ${id} not found`, field: "id" });
+      }
+
+      res.status(200).json({ status: 200, data: customer, error: null });
     });
 
     app.post('/customers', (req, res) => {
-      res.status(201).json({ status: 201, data: { message: "createCustomer stub", received: req.body }, error: null });
+      const { name, phone, email } = req.body;
+
+      if (!name || !phone) {
+        return res.status(422).json({ status: 422, error: "'name' and 'phone' are required", field: "presence" });
+      }
+      if (typeof name !== 'string' || typeof phone !== 'string') {
+        return res.status(422).json({ status: 422, error: "'name' and 'phone' must be text strings", field: "type" });
+      }
+      
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (email && (typeof email !== 'string' || !emailRegex.test(email))) {
+        return res.status(422).json({ status: 422, error: "Invalid email address format", field: "email" });
+      }
+
+      const newCustomer = { id: Date.now(), name, phone, email: email || "" };
+      customerDb.push(newCustomer);
+
+      res.status(201).json({ status: 201, data: newCustomer, error: null });
     });
 
     app.put('/customers/:id', (req, res) => {
-      const { id } = req.params;
-      res.status(200).json({ status: 200, data: { message: "updateCustomer stub", id, updated: req.body }, error: null });
+      const id = parseInt(req.params.id, 10);
+      if (isNaN(id)) {
+        return res.status(422).json({ status: 422, error: "Customer ID must be a numeric integer", field: "id" });
+      }
+
+      const customer = customerDb.find(c => c.id === id);
+      if (!customer) {
+        return res.status(422).json({ status: 422, error: `Customer with ID ${id} not found`, field: "id" });
+      }
+
+      const { name, phone, email } = req.body;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (email && !emailRegex.test(email)) {
+        return res.status(422).json({ status: 422, error: "Invalid email address format", field: "email" });
+      }
+
+      if (name) customer.name = name;
+      if (phone) customer.phone = phone;
+      if (email) customer.email = email;
+
+      res.status(200).json({ status: 200, data: customer, error: null });
     });
 
     app.delete('/customers/:id', (req, res) => {
-      const { id } = req.params;
-      res.status(200).json({ status: 200, data: { message: "deleteCustomer stub", id }, error: null });
+      const userRole = (req.headers['x-user-role'] || '').toLowerCase();
+      if (userRole !== 'admin') {
+        return res.status(403).json({ status: 403, error: "Forbidden: Only Administrators can delete customer records", field: "authorization" });
+      }
+
+      const id = parseInt(req.params.id, 10);
+      if (isNaN(id)) {
+        return res.status(422).json({ status: 422, error: "Customer ID must be a numeric integer", field: "id" });
+      }
+
+      const idx = customerDb.findIndex(c => c.id === id);
+      if (idx === -1) {
+        return res.status(422).json({ status: 422, error: `Customer with ID ${id} not found`, field: "id" });
+      }
+
+      customerDb.splice(idx, 1);
+      res.status(200).json({ status: 200, data: { message: `Customer ${id} deleted successfully` }, error: null });
     });
 
-    // STAFF STUBS (Assigned to Norie & Rome)
+    // ------------------------------------------
+    // STAFF ROUTES
+    // ------------------------------------------
+    const staffDb = [
+      { id: 1, name: "Norie", role: "Manager" },
+      { id: 2, name: "Rome", role: "Admin" },
+      { id: 3, name: "Janila", role: "Cashier" }
+    ];
+
     app.get('/staff', (req, res) => {
-      res.status(200).json({ status: 200, data: [], error: null });
+      res.status(200).json({ status: 200, data: staffDb, error: null });
     });
 
     app.get('/staff/:id', (req, res) => {
-      const { id } = req.params;
-      res.status(200).json({ status: 200, data: { message: "getStaffById stub", id }, error: null });
+      const id = parseInt(req.params.id, 10);
+      if (isNaN(id)) {
+        return res.status(422).json({ status: 422, error: "Staff ID must be a numeric integer", field: "id" });
+      }
+
+      const staffMember = staffDb.find(s => s.id === id);
+      if (!staffMember) {
+        return res.status(422).json({ status: 422, error: `Staff member with ID ${id} not found`, field: "id" });
+      }
+
+      res.status(200).json({ status: 200, data: staffMember, error: null });
     });
 
     app.post('/staff', (req, res) => {
-      res.status(201).json({ status: 201, data: { message: "createStaff stub", received: req.body }, error: null });
+      const { name, role } = req.body;
+
+      if (!name || !role) {
+        return res.status(422).json({ status: 422, error: "Both 'name' and 'role' are required", field: !name ? "name" : "role" });
+      }
+
+      if (typeof name !== 'string' || typeof role !== 'string') {
+        return res.status(422).json({ status: 422, error: "'name' and 'role' must be text strings", field: typeof name !== 'string' ? "name" : "role" });
+      }
+
+      if (!ALLOWED_ROLES.includes(role)) {
+        return res.status(422).json({ status: 422, error: `Invalid role. Allowed roles: ${ALLOWED_ROLES.join(", ")}`, field: "role" });
+      }
+
+      const newStaff = { id: Date.now(), name, role };
+      staffDb.push(newStaff);
+
+      res.status(201).json({ status: 201, data: newStaff, error: null });
     });
 
     app.put('/staff/:id', (req, res) => {
-      const { id } = req.params;
-      res.status(200).json({ status: 200, data: { message: "updateStaff stub", id, updated: req.body }, error: null });
+      const id = parseInt(req.params.id, 10);
+      if (isNaN(id)) {
+        return res.status(422).json({ status: 422, error: "Staff ID must be a numeric integer", field: "id" });
+      }
+
+      const staffMember = staffDb.find(s => s.id === id);
+      if (!staffMember) {
+        return res.status(422).json({ status: 422, error: `Staff member with ID ${id} not found`, field: "id" });
+      }
+
+      const { name, role } = req.body;
+      if (role && !ALLOWED_ROLES.includes(role)) {
+        return res.status(422).json({ status: 422, error: `Invalid role. Allowed roles: ${ALLOWED_ROLES.join(", ")}`, field: "role" });
+      }
+
+      if (name) staffMember.name = name;
+      if (role) staffMember.role = role;
+
+      res.status(200).json({ status: 200, data: staffMember, error: null });
     });
 
     app.delete('/staff/:id', (req, res) => {
-      const { id } = req.params;
-      res.status(200).json({ status: 200, data: { message: "deleteStaff stub", id }, error: null });
+      const userRole = (req.headers['x-user-role'] || '').toLowerCase();
+      if (userRole !== 'admin') {
+        return res.status(403).json({ status: 403, error: "Forbidden: Only Administrators can delete staff accounts", field: "authorization" });
+      }
+
+      const id = parseInt(req.params.id, 10);
+      if (isNaN(id)) {
+        return res.status(422).json({ status: 422, error: "Staff ID must be a numeric integer", field: "id" });
+      }
+
+      const idx = staffDb.findIndex(s => s.id === id);
+      if (idx === -1) {
+        return res.status(422).json({ status: 422, error: `Staff member with ID ${id} not found`, field: "id" });
+      }
+
+      staffDb.splice(idx, 1);
+      res.status(200).json({ status: 200, data: { message: `Staff member ${id} deleted successfully` }, error: null });
     });
 
     if (require.main === module) {
@@ -973,4 +1326,8 @@ if (typeof require !== 'undefined' && typeof process !== 'undefined') {
   } catch (err) {
     // Client browser context, Express server setup ignored
   }
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = app;
 }
