@@ -41,47 +41,60 @@ let appState = {
 
 const StorageEngine = {
   init() {
-    if (!localStorage.getItem('temptea_products')) {
-      localStorage.setItem('temptea_products', JSON.stringify(DEFAULT_PRODUCTS));
-    }
-    if (!localStorage.getItem('temptea_sales')) {
-      const initialSales = [{
-        id: "#TRX-882019",
-        timestamp: "9/3/2026, 2:30:15 PM",
-        customer: "Walk-in Guest",
-        type: "Dine-In",
-        items: [{ id: 101, name: "Matcha Latte", price: 110, qty: 1, addon: "50% Sugar" }],
-        total: 110.00,
-        cashPaid: 200.00,
-        change: 90.00,
-        cashier: "Cashier Demo"
-      }];
-      localStorage.setItem('temptea_sales', JSON.stringify(initialSales));
-    }
-    if (!localStorage.getItem('temptea_receipt_cfg')) {
-      localStorage.setItem('temptea_receipt_cfg', JSON.stringify(DEFAULT_RECEIPT_CONFIG));
-    }
+    if (typeof window !== 'undefined' && window.localStorage) {
+      if (!localStorage.getItem('temptea_products')) {
+        localStorage.setItem('temptea_products', JSON.stringify(DEFAULT_PRODUCTS));
+      }
+      if (!localStorage.getItem('temptea_sales')) {
+        const initialSales = [{
+          id: "#TRX-882019",
+          timestamp: "9/3/2026, 2:30:15 PM",
+          customer: "Walk-in Guest",
+          type: "Dine-In",
+          items: [{ id: 101, name: "Matcha Latte", price: 110, qty: 1, addon: "50% Sugar" }],
+          total: 110.00,
+          cashPaid: 200.00,
+          change: 90.00,
+          cashier: "Cashier Demo"
+        }];
+        localStorage.setItem('temptea_sales', JSON.stringify(initialSales));
+      }
+      if (!localStorage.getItem('temptea_receipt_cfg')) {
+        localStorage.setItem('temptea_receipt_cfg', JSON.stringify(DEFAULT_RECEIPT_CONFIG));
+      }
 
-    appState.products = JSON.parse(localStorage.getItem('temptea_products'));
-    appState.sales = JSON.parse(localStorage.getItem('temptea_sales'));
-    appState.receiptConfig = JSON.parse(localStorage.getItem('temptea_receipt_cfg'));
+      appState.products = JSON.parse(localStorage.getItem('temptea_products'));
+      appState.sales = JSON.parse(localStorage.getItem('temptea_sales'));
+      appState.receiptConfig = JSON.parse(localStorage.getItem('temptea_receipt_cfg'));
+    } else {
+      appState.products = DEFAULT_PRODUCTS;
+      appState.receiptConfig = DEFAULT_RECEIPT_CONFIG;
+    }
   },
 
   saveProducts() {
-    localStorage.setItem('temptea_products', JSON.stringify(appState.products));
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('temptea_products', JSON.stringify(appState.products));
+    }
   },
 
   saveSales() {
-    localStorage.setItem('temptea_sales', JSON.stringify(appState.sales));
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('temptea_sales', JSON.stringify(appState.sales));
+    }
   },
 
   saveReceiptConfig() {
-    localStorage.setItem('temptea_receipt_cfg', JSON.stringify(appState.receiptConfig));
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('temptea_receipt_cfg', JSON.stringify(appState.receiptConfig));
+    }
   },
 
   resetAll() {
-    localStorage.clear();
-    location.reload();
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.clear();
+      location.reload();
+    }
   }
 };
 
@@ -89,24 +102,26 @@ const StorageEngine = {
 // 3. INITIALIZATION & UI ROUTING
 // ==========================================
 
-document.addEventListener('DOMContentLoaded', () => {
-  StorageEngine.init();
-  setupEventListeners();
-  updateReceiptPreview();
-});
+if (typeof window !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', () => {
+    StorageEngine.init();
+    setupEventListeners();
+    updateReceiptPreview();
+  });
 
-// GLOBAL DELEGATED CLICK HANDLERS (Ensures desktop builds catch all button clicks)
-document.addEventListener('click', (e) => {
-  if (e.target.matches('#btn-apply-discount') || e.target.closest('#btn-apply-discount')) {
-    e.preventDefault();
-    applyDiscountPrompt();
-  }
-  
-  if (e.target.matches('#btn-remove-discount') || e.target.closest('#btn-remove-discount')) {
-    e.preventDefault();
-    removeDiscount();
-  }
-});
+  // GLOBAL DELEGATED CLICK HANDLERS (Ensures desktop builds catch all button clicks)
+  document.addEventListener('click', (e) => {
+    if (e.target.matches('#btn-apply-discount') || e.target.closest('#btn-apply-discount')) {
+      e.preventDefault();
+      applyDiscountPrompt();
+    }
+    
+    if (e.target.matches('#btn-remove-discount') || e.target.closest('#btn-remove-discount')) {
+      e.preventDefault();
+      removeDiscount();
+    }
+  });
+}
 
 function setupEventListeners() {
   const pinInput = document.getElementById('pin-input');
@@ -787,18 +802,20 @@ function updateReceiptPreview() {
   if (document.getElementById('prev-footer-msg')) document.getElementById('prev-footer-msg').innerText = cfg.footerMsg;
 }
 
-document.getElementById('receipt-config-form')?.addEventListener('submit', (e) => {
-  e.preventDefault();
-  appState.receiptConfig = {
-    storeName: document.getElementById('cfg-store-name').value,
-    address: document.getElementById('cfg-store-address').value,
-    tin: document.getElementById('cfg-store-tin').value,
-    footerMsg: document.getElementById('cfg-footer-msg').value
-  };
-  StorageEngine.saveReceiptConfig();
-  updateReceiptPreview();
-  showToast("Receipt Template Updated!");
-});
+if (typeof window !== 'undefined') {
+  document.getElementById('receipt-config-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    appState.receiptConfig = {
+      storeName: document.getElementById('cfg-store-name').value,
+      address: document.getElementById('cfg-store-address').value,
+      tin: document.getElementById('cfg-store-tin').value,
+      footerMsg: document.getElementById('cfg-footer-msg').value
+    };
+    StorageEngine.saveReceiptConfig();
+    updateReceiptPreview();
+    showToast("Receipt Template Updated!");
+  });
+}
 
 function renderOrdersLog() {
   const tbody = document.getElementById('orders-log-tbody');
@@ -837,4 +854,75 @@ function showToast(message, type = 'success') {
   setTimeout(() => {
     toast.remove();
   }, 3000);
+}
+
+// ==========================================
+// 10. WEEK 3: RESTFUL API STUB HANDLERS
+// ==========================================
+
+// If executing in Node.js server context, register HTTP routes
+if (typeof require !== 'undefined' && typeof process !== 'undefined') {
+  try {
+    const express = require('express');
+    const app = express();
+    const PORT = process.env.PORT || 3000;
+
+    app.use(express.json());
+
+    // PRODUCTS STUBS
+    app.get('/products', (req, res) => {
+      res.status(200).json({ status: 200, data: appState.products, error: null });
+    });
+
+    app.get('/products/:id', (req, res) => {
+      const { id } = req.params;
+      res.status(200).json({ status: 200, data: { message: "getProductById stub", id }, error: null });
+    });
+
+    app.post('/products', (req, res) => {
+      res.status(201).json({ status: 201, data: { message: "createProduct stub", received: req.body }, error: null });
+    });
+
+    app.put('/products/:id', (req, res) => {
+      const { id } = req.params;
+      res.status(200).json({ status: 200, data: { message: "updateProduct stub", id, updated: req.body }, error: null });
+    });
+
+    app.delete('/products/:id', (req, res) => {
+      const { id } = req.params;
+      res.status(200).json({ status: 200, data: { message: "deleteProduct stub", id }, error: null });
+    });
+
+    // ORDERS STUBS
+    app.get('/orders', (req, res) => {
+      res.status(200).json({ status: 200, data: appState.sales, error: null });
+    });
+
+    app.get('/orders/:id', (req, res) => {
+      const { id } = req.params;
+      res.status(200).json({ status: 200, data: { message: "getOrderById stub", id }, error: null });
+    });
+
+    app.post('/orders', (req, res) => {
+      res.status(201).json({ status: 201, data: { message: "createOrder stub", received: req.body }, error: null });
+    });
+
+    app.put('/orders/:id', (req, res) => {
+      const { id } = req.params;
+      res.status(200).json({ status: 200, data: { message: "updateOrder stub", id, updated: req.body }, error: null });
+    });
+
+    app.delete('/orders/:id', (req, res) => {
+      const { id } = req.params;
+      res.status(200).json({ status: 200, data: { message: "deleteOrder stub", id }, error: null });
+    });
+
+    if (require.main === module) {
+      app.listen(PORT, () => {
+        console.log(`TEMPTEA POS API Server running on port ${PORT}`);
+      });
+    }
+  } catch (err) {
+    // Client browser context, Express server setup ignored
+  }
 }
