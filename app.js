@@ -926,3 +926,27 @@ if (typeof require !== 'undefined' && typeof process !== 'undefined') {
     // Client browser context, Express server setup ignored
   }
 }
+
+  // ORDERS STUBS (Assigned to Mekyla)
+app.get('/orders', (req, res) => {
+  res.status(200).json({ status: 200, data: appState.sales, error: null });
+});
+
+app.get('/orders/:id', (req, res) => {
+  const { id } = req.params;
+  res.status(200).json({ status: 200, data: { message: "getOrderById stub", id }, error: null });
+});
+
+app.post('/orders', (req, res) => {
+  res.status(201).json({ status: 201, data: { message: "createOrder stub", received: req.body }, error: null });
+});
+
+app.put('/orders/:id', (req, res) => {
+  const { id } = req.params;
+  res.status(200).json({ status: 200, data: { message: "updateOrder stub", id, updated: req.body }, error: null });
+});
+
+app.delete('/orders/:id', (req, res) => {
+  const { id } = req.params;
+  res.status(200).json({ status: 200, data: { message: "deleteOrder stub", id }, error: null });
+});
