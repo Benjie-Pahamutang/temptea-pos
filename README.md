@@ -1,21 +1,12 @@
-# TEMPTEA POS System
+# Wireframes Index & Screen Assignments
+# TEMPTEA POS Enterprise Application
 
-A Point of Sale (POS) application designed for managing tea shop transactions, product catalogs, customer loyalty programs, and staff administrative routing.
+## Documentation & Deliverables
+* [Agile Product Backlog & Wireframe Mapping](docs/backlog.md)
+* [RESTful API Documentation](routes.md)
+* [Wireframes Index](docs/wireframe-index.html)
 
----
-
-## 📋 Features & Responsibilities
-
-* **Product Catalog**: Read, create, update, and delete beverage items, stock levels, and size/topping modifiers.
-* **Order Checkout & Processing**: Handle order creation, list details, empty states, and void order workflows.
-* **Loyalty Customer Management**: Search customer accounts, track points, and process loyalty rewards.
-* **Staff Profiles & Shifts**: Staff PIN management, shift drawer controls, profile setup, and access permissions.
-
----
-
-## 🎨 Wireframes & Screen Assignments
-
-Every module contains happy paths, empty states, error states, and confirmation steps:
+Every screen contains happy path, empty state, error state, and delete confirmation step:
 
 | Screen / State | Assigned Designer | Associated Story |
 | :--- | :--- | :--- |
@@ -28,15 +19,32 @@ Every module contains happy paths, empty states, error states, and confirmation 
 | **Staff Profile & Shift Drawer (List / Detail)** | Norie Jhon Cepriano | Profiles Read/Create |
 | **Staff PIN Reset & Deactivation Confirmation** | Rome Jean Quistorio | Profiles Update/Delete |
 
----
-
-## 🧪 Key Test Scenarios
-
-* **Catalog Search Filter**: Searching for `"Winter Melon"` displays matching beverage items, real-time stock levels, and associated size or topping options.
+*Note: Wireframe image files (`.png` / `.fig` / `.excalidraw`) for each state are stored in this directory.*
 
 ---
 
-## 📂 Documentation & Asset Storage
+## Application Screenshots & Feature Previews
 
-* Wireframes and screen design assets are managed under the `docs/` directory.
-* Screenshots, mockups, and UI references (`.png`, `.fig`, `.excalidraw`) are stored inside `docs/image/`.
+### 1. User Authentication / PIN Entry
+![PIN Entry Screen](../../images/1v.png)
+
+### 2. POS Ordering Interface
+![POS Ordering Interface](../../images/2v.png)
+
+### 3. Dashboard Analytics & Sales Metrics
+![Dashboard Analytics](../../images/3v.png)
+
+### 4. Product Catalog Management
+![Product Catalog Management](../../images/4v.png)
+
+### 5. Product Creation & Form Validation
+![Product Creation Form](../../images/5v.png)
+
+### 6. Receipt Generation & Printing
+![Receipt Template & Print Preview](../../images/6v.png)
+
+### 7. Security Alert & Role Access Control
+![Security Alert Screen](../../images/7v.png)
+
+### 8. Transaction & Order History Logs
+![Transaction History Logs](../../images/8v.png)

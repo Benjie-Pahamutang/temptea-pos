@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "electron .",
+    "test": "node --test tests/app.test.js",
     "build-exe": "npx electron-packager . TEMPTEA-POS --platform=win32 --arch=x64 --electron-version=28.3.3 --out=dist/ --overwrite",
     "dist": "npx electron-builder --win",
     "publish-github": "npx electron-builder --win --publish always"
@@ -16,7 +17,6 @@
   "author": "Benjie Pahamutang",
   "license": "ISC",
   "dependencies": {
-    "electron-updater": "6.8.9",
     "express-rate-limit": "^8.7.0",
     "express-validator": "^7.3.2",
     "helmet": "^8.3.0"
@@ -25,6 +25,7 @@
     "electron": "^28.3.3",
     "electron-builder": "24.13.3",
     "electron-packager": "^17.1.2",
+    "electron-updater": "6.8.9",
     "supertest": "^7.2.2"
   },
   "build": {
@@ -39,7 +40,10 @@
       "index.html",
       "style.css",
       "app.js",
-      "main.js"
+      "main.js",
+      "routes/**/*",
+      "controllers/**/*",
+      "middleware/**/*"
     ],
     "publish": [
       {
