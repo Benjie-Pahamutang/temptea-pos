@@ -4,7 +4,7 @@
 ## Documentation & Deliverables
 * [Agile Product Backlog & Wireframe Mapping](docs/backlog.md)
 * [RESTful API Documentation](routes.md)
-* [Wireframes Index](docs/wireframe-index.html)
+* [Wireframes Index](docs/backlog.md#wireframes-index--screen-assignments)
 
 Every screen contains happy path, empty state, error state, and delete confirmation step:
 
