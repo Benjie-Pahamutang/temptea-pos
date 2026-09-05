@@ -48,6 +48,10 @@
 * **DELETE:** As an Admin, I want to deactivate terminated staff accounts with confirmation so that unauthorized system access is prevented.
   * *Acceptance Criteria:* Deactivates login without deleting historic transaction logs tied to user ID.
 
+---
+
+## Wireframes Index & Screen Mapping
+
 1. **User Authentication / PIN Entry**
    ![User Authentication / PIN Entry](wireframes/1v.PNG)
 
