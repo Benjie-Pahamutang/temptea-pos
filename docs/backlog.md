@@ -48,30 +48,26 @@
 * **DELETE:** As an Admin, I want to deactivate terminated staff accounts with confirmation so that unauthorized system access is prevented.
   * *Acceptance Criteria:* Deactivates login without deleting historic transaction logs tied to user ID.
 
----
-
-## Wireframes Index & Screen Assignments
-
 1. **User Authentication / PIN Entry**
-   ![User Authentication / PIN Entry](wireframes/1v.png)
+   ![User Authentication / PIN Entry](wireframes/1v.PNG)
 
 2. **POS Ordering Interface**
-   ![POS Ordering Interface](wireframes/2v.png)
+   ![POS Ordering Interface](wireframes/2v.PNG)
 
 3. **Dashboard Analytics & Sales Metrics**
-   ![Dashboard Analytics & Sales Metrics](wireframes/3v.png)
+   ![Dashboard Analytics & Sales Metrics](wireframes/3v.PNG)
 
 4. **Product Catalog Management**
-   ![Product Catalog Management](wireframes/4v.png)
+   ![Product Catalog Management](wireframes/4v.PNG)
 
 5. **Product Creation & Form Validation**
-   ![Product Creation & Form Validation](wireframes/5v.png)
+   ![Product Creation & Form Validation](wireframes/5v.PNG)
 
 6. **Receipt Generation & Printing**
-   ![Receipt Generation & Printing](wireframes/6v.png)
+   ![Receipt Generation & Printing](wireframes/6v.PNG)
 
 7. **Security Alert & Role Access Control**
-   ![Security Alert & Role Access Control](wireframes/7v.png)
+   ![Security Alert & Role Access Control](wireframes/7v.PNG)
 
 8. **Transaction & Order History Logs**
-   ![Transaction & Order History Logs](wireframes/8v.png)
+   ![Transaction & Order History Logs](wireframes/8v.PNG)
