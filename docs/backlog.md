@@ -47,3 +47,31 @@
   * *Acceptance Criteria:* Requires old PIN entry before approving new PIN.
 * **DELETE:** As an Admin, I want to deactivate terminated staff accounts with confirmation so that unauthorized system access is prevented.
   * *Acceptance Criteria:* Deactivates login without deleting historic transaction logs tied to user ID.
+
+---
+
+## Wireframes Index & Screen Assignments
+
+1. **User Authentication / PIN Entry**
+   ![User Authentication / PIN Entry](wireframes/1v.png)
+
+2. **POS Ordering Interface**
+   ![POS Ordering Interface](wireframes/2v.png)
+
+3. **Dashboard Analytics & Sales Metrics**
+   ![Dashboard Analytics & Sales Metrics](wireframes/3v.png)
+
+4. **Product Catalog Management**
+   ![Product Catalog Management](wireframes/4v.png)
+
+5. **Product Creation & Form Validation**
+   ![Product Creation & Form Validation](wireframes/5v.png)
+
+6. **Receipt Generation & Printing**
+   ![Receipt Generation & Printing](wireframes/6v.png)
+
+7. **Security Alert & Role Access Control**
+   ![Security Alert & Role Access Control](wireframes/7v.png)
+
+8. **Transaction & Order History Logs**
+   ![Transaction & Order History Logs](wireframes/8v.png)
