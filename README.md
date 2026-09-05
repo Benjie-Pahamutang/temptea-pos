@@ -25,26 +25,26 @@ Every screen contains happy path, empty state, error state, and delete confirmat
 
 ## Application Screenshots & Feature Previews
 
-### 1. User Authentication / PIN Entry
-![PIN Entry Screen](../../images/1v.png)
+1. **User Authentication / PIN Entry**  
+   ![User Authentication / PIN Entry](docs/wireframes/1v.png)
 
-### 2. POS Ordering Interface
-![POS Ordering Interface](../../images/2v.png)
+2. **POS Ordering Interface**  
+   ![POS Ordering Interface](docs/wireframes/2v.png)
 
-### 3. Dashboard Analytics & Sales Metrics
-![Dashboard Analytics](../../images/3v.png)
+3. **Dashboard Analytics & Sales Metrics**  
+   ![Dashboard Analytics & Sales Metrics](docs/wireframes/3v.png)
 
-### 4. Product Catalog Management
-![Product Catalog Management](../../images/4v.png)
+4. **Product Catalog Management**  
+   ![Product Catalog Management](docs/wireframes/4v.png)
 
-### 5. Product Creation & Form Validation
-![Product Creation Form](../../images/5v.png)
+5. **Product Creation & Form Validation**  
+   ![Product Creation & Form Validation](docs/wireframes/5v.png)
 
-### 6. Receipt Generation & Printing
-![Receipt Template & Print Preview](../../images/6v.png)
+6. **Receipt Generation & Printing**  
+   ![Receipt Generation & Printing](docs/wireframes/6v.png)
 
-### 7. Security Alert & Role Access Control
-![Security Alert Screen](../../images/7v.png)
+7. **Security Alert & Role Access Control**  
+   ![Security Alert & Role Access Control](docs/wireframes/7v.png)
 
-### 8. Transaction & Order History Logs
-![Transaction History Logs](../../images/8v.png)
+8. **Transaction & Order History Logs**  
+   ![Transaction & Order History Logs](docs/wireframes/8v.png)
