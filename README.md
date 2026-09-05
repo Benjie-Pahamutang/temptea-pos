@@ -26,25 +26,25 @@ Every screen contains happy path, empty state, error state, and delete confirmat
 ## Application Screenshots & Feature Previews
 
 1. **User Authentication / PIN Entry**  
-   ![User Authentication / PIN Entry](docs/wireframes/1v.png)
+   ![User Authentication / PIN Entry](docs/image/1v.PNG)
 
 2. **POS Ordering Interface**  
-   ![POS Ordering Interface](docs/wireframes/2v.png)
+   ![POS Ordering Interface](docs/image/2v.PNG)
 
 3. **Dashboard Analytics & Sales Metrics**  
-   ![Dashboard Analytics & Sales Metrics](docs/wireframes/3v.png)
+   ![Dashboard Analytics & Sales Metrics](docs/image/3v.PNG)
 
 4. **Product Catalog Management**  
-   ![Product Catalog Management](docs/wireframes/4v.png)
+   ![Product Catalog Management](docs/image/4v.PNG)
 
 5. **Product Creation & Form Validation**  
-   ![Product Creation & Form Validation](docs/wireframes/5v.png)
+   ![Product Creation & Form Validation](docs/image/5v.PNG)
 
 6. **Receipt Generation & Printing**  
-   ![Receipt Generation & Printing](docs/wireframes/6v.png)
+   ![Receipt Generation & Printing](docs/image/6v.PNG)
 
 7. **Security Alert & Role Access Control**  
-   ![Security Alert & Role Access Control](docs/wireframes/7v.png)
+   ![Security Alert & Role Access Control](docs/image/7v.PNG)
 
 8. **Transaction & Order History Logs**  
-   ![Transaction & Order History Logs](docs/wireframes/8v.png)
+   ![Transaction & Order History Logs](docs/image/8v.PNG)
