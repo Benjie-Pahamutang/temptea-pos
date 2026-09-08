@@ -1,6 +1,23 @@
 # Wireframes Index & Screen Assignments
 # TEMPTEA POS Enterprise Application
 
+---
+
+## 🚀 Quick Start & Local Setup
+
+Follow these steps to run **TEMPTEA POS** locally on your machine:
+
+### Prerequisites
+* [Node.js](https://nodejs.org/) (v16 or higher recommended)
+* [Git](https://git-scm.com/)
+
+### Installation Steps
+
+1. **Clone the Repository**
+   ```bash
+   git clone [https://github.com/Benjie-Pahamutang/temptea-pos.git](https://github.com/Benjie-Pahamutang/temptea-pos.git)
+   cd temptea-pos
+
 ## Documentation & Deliverables
 * [Agile Product Backlog & Wireframe Mapping](docs/backlog.md)
 * [RESTful API Documentation](routes.md)
