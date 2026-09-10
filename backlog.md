@@ -31,7 +31,7 @@
 
 ### Record Type 1: Products & Inventory Items (Owner: Benjie Pahamutang)
 * **CREATE (PROD-C):** As an Admin, I want to add a new tea/topping item with stock counts and prices so that it becomes available for ordering.
-  * *Acceptance Criteria:* Form validates positive pricing/stock; item appears in POS catalog immediately upon submit.
+  * *Acceptance Criteria:* Form validates positive pricing/stock; item appears in POS catalog immediately upon submit..
 * **READ List (PROD-RL):** As a Cashier, I want to view a catalog grid of all available drink products so that I can process customer selections.
   * *Acceptance Criteria:* Grid renders product images, prices, and stock indicators. Empty state shows "No Products Found".
 * **READ Detail (PROD-RD):** As an Admin, I want to view an individual item's full stock history and recipe parameters so that I can audit inventory usage.
