@@ -33,8 +33,8 @@ Every screen contains happy path, empty state, error state, and delete confirmat
 | **Void Order Modal / Error State** | Mekyla Bagaporo | Orders Delete/Update |
 | **Loyalty Customer Search (List / Detail / Empty)** | Janila Harina Mino | Customer Read/Create |
 | **Loyalty Point Redemption / Error State** | Janila Harina Mino | Customer Update/Delete |
-| **Staff Profile & Shift Drawer (List / Detail)** | Norie Jhon Cepriano | Profiles Read/Create |
-| **Staff PIN Reset & Deactivation Confirmation** | Rome Jean Quistorio | Profiles Update/Delete |
+| **Staff Profile & Shift Drawer (List / Detail)** | Norie Jhon Cipriano | Profiles Read/Create |
+| **Staff PIN Reset & Deactivation Confirmation** | Rome Jean A. Quistorio | Profiles Update/Delete |
 
 *Note: Wireframe image files (`.png` / `.fig` / `.excalidraw`) for each state are stored in this directory.*
 
