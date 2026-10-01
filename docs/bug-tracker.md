@@ -40,3 +40,39 @@ This document tracks all defects uncovered during Week 10 adversarial testing. I
 * **Expected Outcome:** Toasts stack neatly or update text dynamically.
 * **Actual Outcome:** Toast alert flashes rapidly and dismisses prematurely after 1 second.
 * **Status:** **Triaged for Week 11 Fix**
+
+# Triaged Bug List & Resolution Log (Week 11 Update)
+
+This document tracks all defects uncovered during Week 10 testing and their official resolutions completed in Week 11 prior to production deployment.
+
+---
+
+## Resolved Bug Log
+
+### BUG-01: Product Form Allows Negative Price Submission (P0)
+* **Severity:** **P0 (Critical — Core Data Integrity)**[cite: 15]
+* **Assigned Owner:** Benjie Pahamutang
+* **Fix Summary:** Added strict server-side validation checks in `productController.js` enforcing `price >= 0` and returning HTTP 422 for negative values. Attached regression test in `tests/unit/productValidation.test.js`.
+* **Status:** **RESOLVED**
+
+---
+
+### BUG-02: Double-Clicking Checkout Button Creates Duplicate Orders (P1)
+* **Severity:** **P1 (High — Financial Impact)**[cite: 15]
+* **Assigned Owner:** Mekyla Bagaporo
+* **Fix Summary:** Added UI submit guard setting `button.disabled = true` and toggling pending state spinner on initial submit event. Re-enables button upon receiving response[cite: 6].
+* **Status:** **RESOLVED**
+
+---
+
+### BUG-03: Toast Notification Timer Overlaps on Rapid Errors (P2)
+* **Severity:** **P2 (Minor — Polish / UI Glitch)**[cite: 15]
+* **Assigned Owner:** Janila Harina Mino
+* **Fix Summary:** Centralized toast lifecycle management in `feedbackHelper.js` to clear existing active timeout instances before rendering new notifications.
+* **Status:** **RESOLVED**
+
+---
+
+## Technical Debt Refactoring (Task 2)
+1. **Refactored Fat Controller:** Extracted repeated JSON response formatting helper routines out of API routes into a centralized `responseHandler.js` middleware.
+2. **Duplicated Input Sanitization:** Created a shared `sanitizeInput()` utility function reused across both Product and Customer Loyalty creation forms[cite: 16].
