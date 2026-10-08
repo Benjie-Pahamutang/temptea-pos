@@ -29,9 +29,6 @@ function createWindow() {
   // Load interface safely from the app package
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
-  // Force open DevTools on startup to diagnose the white screen issue
-  mainWindow.webContents.openDevTools();
-
   // Clean UI setup
   mainWindow.setMenuBarVisibility(false);
 

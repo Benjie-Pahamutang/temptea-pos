@@ -8,7 +8,8 @@
     "url": "git+https://github.com/Benjie-Pahamutang/temptea-pos.git"
   },
   "scripts": {
-    "start": "electron .",
+    "start": "node server.js",
+    "electron": "electron .",
     "test": "node --test tests/app.test.js",
     "build-exe": "npx electron-packager . TEMPTEA-POS --platform=win32 --arch=x64 --electron-version=28.3.3 --out=dist/ --overwrite",
     "dist": "npx electron-builder --win",
@@ -17,6 +18,7 @@
   "author": "Benjie Pahamutang",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.19.2",
     "express-rate-limit": "^8.7.0",
     "express-validator": "^7.3.2",
     "helmet": "^8.3.0"
@@ -41,6 +43,7 @@
       "style.css",
       "app.js",
       "main.js",
+      "server.js",
       "routes/**/*",
       "controllers/**/*",
       "middleware/**/*"
@@ -75,5 +78,9 @@
   "bugs": {
     "url": "https://github.com/Benjie-Pahamutang/temptea-pos/issues"
   },
-  "homepage": "https://github.com/Benjie-Pahamutang/temptea-pos#readme"
+  "homepage": "https://github.com/Benjie-Pahamutang/temptea-pos#readme",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  }
 }
