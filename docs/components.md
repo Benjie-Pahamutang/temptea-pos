@@ -10,10 +10,10 @@ This document outlines the reusable UI components used to construct the views fo
 | :--- | :--- | :--- |
 | **Navbar & Header** | `<header class="app-header">` | Global navigation bar showing app title, cashier PIN profile status, and clock out button. |
 | **Product Card Grid / Row** | `.product-card`, `.product-row` | Displays drink item image, price, stock level indicator, and quick-add button. |
-| **Order Cart Item** | `.cart-item` | Single item row in the checkout drawer with quantity controls (+/-), customization tags (sweetness, ice, toppings), and remove button. |
-| **Form Group & Input** | `.form-group` | Labeled input wrapper supporting validation error states, help text, and inline 422 error highlighting. |
-| **Status Badge** | `.badge` | Color-coded status indicator for inventory levels (*In Stock*, *Low Stock*, *Out of Stock*) and cashier shift status (*Clocked In*, *Off Shift*). |
-| **Modal Dialog** | `.modal-overlay` | Reusable popup container for destructive action confirmations (e.g., Void Order, Deactivate Staff, Delete Product). |
+| **Order Cart Item* | `.cart-item` | Single item row in the checkout drawer with quantity controls (+/-), customization tags (sweetness, ice, toppings), and remove button. |
+| **Form Group & Input* | `.form-group` | Labeled input wrapper supporting validation error states, help text, and inline 422 error highlighting. |
+| **Status Badge* | `.badge` | Color-coded status indicator for inventory levels (*In Stock*, *Low Stock*, *Out of Stock*) and cashier shift status (*Clocked In*, *Off Shift*). |
+| **Modal Dialog* | `.modal-overlay` | Reusable popup container for destructive action confirmations (e.g., Void Order, Deactivate Staff, Delete Product). |
 | **Feedback Banner / Alert** | `.alert-banner` | Toast/Banner message container for success notifications, 404 missing states, and 500 server error notices. |
 | **Skeleton Loader / Spinner** | `.loading-spinner`, `.skeleton-card` | Placeholder UI displayed while asynchronous controllers fetch or process data. |
 
