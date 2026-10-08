@@ -865,6 +865,7 @@ let app;
 if (typeof require !== 'undefined' && typeof process !== 'undefined') {
   try {
     const express = require('express');
+    const path = require('path');
     let helmet;
     try {
       helmet = require('helmet');
@@ -873,13 +874,21 @@ if (typeof require !== 'undefined' && typeof process !== 'undefined') {
     }
 
     app = express();
-    const PORT = process.env.PORT || 3002;
+    const PORT = process.env.PORT || 10000;
 
     if (helmet) {
       app.use(helmet());
     }
 
     app.use(express.json());
+
+    // Serve static files from root directory
+    app.use(express.static(__dirname));
+
+    // Serve index.html on root route GET /
+    app.get('/', (req, res) => {
+      res.sendFile(path.join(__dirname, 'index.html'));
+    });
 
     const ALLOWED_CATEGORIES = ["Milk Tea", "Fruit Tea", "Burgers", "Snacks", "Add-ons"];
     const ALLOWED_ORDER_TYPES = ["Dine-In", "Take-Out", "Delivery"];
@@ -1172,7 +1181,7 @@ if (typeof require !== 'undefined' && typeof process !== 'undefined') {
       if (typeof name !== 'string' || typeof phone !== 'string') {
         return res.status(422).json({ status: 422, error: "'name' and 'phone' must be text strings", field: "type" });
       }
-      
+
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (email && (typeof email !== 'string' || !emailRegex.test(email))) {
         return res.status(422).json({ status: 422, error: "Invalid email address format", field: "email" });
